@@ -21,7 +21,13 @@ app.get('/chat', ( req, res) => {
         </html>`
     )
 })
-
+app.get('/json', (req, res)=>{
+    res.json({
+        name: 'Prajwal',
+        dommain: 'Backend epxress',
+        age: 23
+    })
+})
 app.listen(port, () =>{
     console.log(`http server is running on port ${port}`);
 })
