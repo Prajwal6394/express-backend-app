@@ -59,3 +59,5 @@ app.post('/submissions', (req, res) => {
 app.listen(port, () => {
     console.log(`http server is running on port ${port}`);
 })
+
+// Also try to implement templates for for your UI
