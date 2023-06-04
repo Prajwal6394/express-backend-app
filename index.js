@@ -34,7 +34,7 @@ app.post('/signup', (req, res) => {
     // Create a new user object and add it to the users array
     const newUser = { email, password };
     users.push(newUser);
-    console.log('this is the users array',users);
+    console.log('this is the users array', users);
 
     // Return a success message to the client
     res.status(200).json({ message: 'Signup successful' });
@@ -44,27 +44,27 @@ app.post('/signup', (req, res) => {
 app.post('/login', (req, res) => {
     // Extract the email and password from the request body
     const { email, password } = req.body;
-  
+
     // Check if the email or password is missing
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+        return res.status(400).json({ error: 'Email and password are required' });
     }
-  
+
     // Find the user in the users array based on the provided email
     const user = users.find((user) => user.email === email);
-  
+
     // Check if the user exists and the password matches
     if (user && user.password === password) {
-      // Generate a random token (e.g., using the 'uuid' library)
-      const token = crypto.randomBytes(16).toString('hex');
-  
-      // Send the token in the response
-      return res.status(200).json({ message: 'Login successful', token });
+        // Generate a random token (e.g., using the 'uuid' library)
+        const token = crypto.randomBytes(16).toString('hex');
+
+        // Send the token in the response
+        return res.status(200).json({ message: 'Login successful', token });
     }
-  
+
     // If the user does not exist or the password is incorrect
     return res.status(401).json({ error: 'Invalid credentials' });
-  });
+});
 
 app.get('/questions', (req, res) => {
     // return the user all the questions in the array
@@ -77,9 +77,22 @@ app.get('/submissions', (req, res) => {
 })
 
 app.post('/submissions', (req, res) => {
-    // let the user submit the problem. Randomly send accept and reject in the api response
-    // Store the submission in the submission array.
-    res.send('Hello, question acceptted successgfully');
+    // Generate a random response to simulate accepting or rejecting the submission
+    const randomResponse = Math.random() < 0.5 ? 'accept' : 'reject';
+
+    // Create a submission object
+    const submission = {
+        problemId: req.body.problemId,
+        code: req.body.code,
+        response: randomResponse
+    };
+
+    // Store the submission in the submissions array
+    submissions.push(submission);
+    console.log(submissions);
+
+    // Send a response to the client
+    res.status(200).json({ message: 'Submission received', response: randomResponse });
 });
 
 
