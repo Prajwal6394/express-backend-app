@@ -68,7 +68,7 @@ app.post('/login', (req, res) => {
 
 app.get('/questions', (req, res) => {
     // return the user all the questions in the array
-    res.send();
+    res.json(questions);
 })
 
 app.get('/submissions', (req, res) => {
