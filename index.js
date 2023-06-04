@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const users = []
+const users = [];
+app.use(express.json());
 const questions = [{
     title: "Larger number in array",
     description: "You have given an array, and you have to return the largest number in the array",
@@ -32,6 +33,7 @@ app.post('/signup', (req, res) => {
     // Create a new user object and add it to the users array
     const newUser = { email, password };
     users.push(newUser);
+    console.log('this is the users array',users);
 
     // Return a success message to the client
     res.status(200).json({ message: 'Signup successful' });
