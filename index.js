@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const USERS = []
+const users = []
 const questions = [{
     title: "Larger number in array",
     description: "You have given an array, and you have to return the largest number in the array",
@@ -15,13 +15,26 @@ const submissions = [{
 }];
 
 app.post('/signup', (req, res) => {
-    // add logic to decode body
-    // Body should have user email and password
+    // Extract the email and password from the request body
+    const { email, password } = req.body;
 
+    // Check if the email or password is missing
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
 
-    //Store email and password in the USERs array above only if the user email and password do not exist in the array
-    // return back 200 status code to the client
-    res.send('Hey there, I am a server and i am from route 1');
+    // Check if the user already exists in the users array
+    const existingUser = users.find((user) => user.email === email);
+    if (existingUser) {
+        return res.status(409).json({ error: 'User already exists' });
+    }
+
+    // Create a new user object and add it to the users array
+    const newUser = { email, password };
+    users.push(newUser);
+
+    // Return a success message to the client
+    res.status(200).json({ message: 'Signup successful' });
 
 })
 
