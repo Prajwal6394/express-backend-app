@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const crypto = require('crypto');
 const app = express()
 const port = 3000
 const users = [];
@@ -41,15 +42,29 @@ app.post('/signup', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-    // add logic to decode body
-    // Body should have user email and password
-
-
-    // check if the user email exist in an array and password matched with the input password from the user and return 200 status code
-    // And if the password is wrong then return 401 status code (Not authorize user)
-    // If password is current also send a random string token in the response
-    res.send('Hello world from route 2');
-})
+    // Extract the email and password from the request body
+    const { email, password } = req.body;
+  
+    // Check if the email or password is missing
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+  
+    // Find the user in the users array based on the provided email
+    const user = users.find((user) => user.email === email);
+  
+    // Check if the user exists and the password matches
+    if (user && user.password === password) {
+      // Generate a random token (e.g., using the 'uuid' library)
+      const token = crypto.randomBytes(16).toString('hex');
+  
+      // Send the token in the response
+      return res.status(200).json({ message: 'Login successful', token });
+    }
+  
+    // If the user does not exist or the password is incorrect
+    return res.status(401).json({ error: 'Invalid credentials' });
+  });
 
 app.get('/questions', (req, res) => {
     // return the user all the questions in the array
