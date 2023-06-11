@@ -131,3 +131,4 @@ app.listen(port, () => {
 
 // Also try to implement templates for for your UI
 // Add a file json (file) to store and fetch user details (email and password)
+// Have integrate and test with front-end
