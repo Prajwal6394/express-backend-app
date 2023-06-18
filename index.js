@@ -130,3 +130,4 @@ app.listen(port, () => {
 })
 
 // @todo - connect to the db
+// Setup a dynomo db
