@@ -129,5 +129,4 @@ app.listen(port, () => {
     console.log(`http server is running on port ${port}`);
 })
 
-// Add db
 
