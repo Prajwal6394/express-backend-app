@@ -7,6 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 
 let todos = [];
+let user = [];
 
 function findIndex(arr, id) {
   for (let i = 0; i < arr.length; i++) {
