@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 
 let todos = [];
-let user = [];
+let users = [];
 
 function findIndex(arr, id) {
   for (let i = 0; i < arr.length; i++) {
@@ -90,55 +90,71 @@ app.use((req, res, next) => {
   res.status(404).send();
 });
 
-function checkUserCreds(username, password) {
-  for (let i = 0; i < user.length; i++) {
-    if (user[i].username === username && user[i].password === password) {
-      return user[i];
+app.post("/signup", (req, res) => {
+  var user = req.body;
+  let userAlreadyExists = false;
+  for (var i = 0; i<users.length; i++) {
+    if (users[i].email === user.email) {
+        userAlreadyExists = true;
+        break;
     }
   }
-  return;
-}
-function findUserFromDB(userName) {
-  for (let i = 0; i < user.length; i++) {
-    if (user[i].username === userName) {
-      return true;
-    }
-  }
-  return false;
-}
-// user sign-up end-point
-app.post('/signup', (req, res) => {
-  findUserName = findUserFromDB(req.body.username);
-  if (findUserName) {
-    res.status(400).send('username already exists');
+  if (userAlreadyExists) {
+    res.sendStatus(400);
   } else {
-    const newUser = {
-      userId: Math.floor(Math.random() * 1000000),
-      username: req.body.username,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+    users.push(user);
+    res.status(201).send("Signup successful");
+  }
+});
+
+app.post("/login", (req, res) => {
+  var user = req.body;
+  let userFound = null;
+  for (var i = 0; i<users.length; i++) {
+    if (users[i].email === user.email && users[i].password === user.password) {
+        userFound = users[i];
+        break;
     }
-    user.push(newUser);
-    res.status(200).json(user);
+  }
+
+  if (userFound) {
+    res.json({
+        firstName: userFound.firstName,
+        lastName: userFound.lastName,
+        email: userFound.email
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
+
+app.get("/data", (req, res) => {
+  var email = req.headers.email;
+  var password = req.headers.password;
+  let userFound = false;
+  for (var i = 0; i<users.length; i++) {
+    if (users[i].email === email && users[i].password === password) {
+        userFound = true;
+        break;
+    }
+  }
+
+  if (userFound) {
+    let usersToReturn = [];
+    for (let i = 0; i<users.length; i++) {
+        usersToReturn.push({
+            firstName: users[i].firstName,
+            lastName: users[i].lastName,
+            email: users[i].email
+        });
+    }
+    res.json({
+        users
+    });
+  } else {
+    res.sendStatus(401);
   }
 })
-
-app.post('/login', (req, res) => {
-  let userExist = checkUserCreds(req.body.username, req.body.password);
-  console.log(userExist);
-  if (userExist) {
-    const response = {
-      firstName: userExist.firstName,
-      lastName: userExist.lastName,
-      userId: userExist.userId,
-      token: Math.floor(Math.random() * 1000000)
-    }
-    res.status(200).json(response);
-  } else {
-    res.status(401).send('Invalid creds');
-  }
-})
-
 app.listen(3000, () =>{
     console.log(`app is running on port${3000}`);
 })
